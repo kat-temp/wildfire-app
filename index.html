@@ -1,0 +1,14 @@
+<!-- home page template -->
+
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+    <img src="/static/cropped_forest.jpg" alt="Forest Background" width="100%" height="auto">
+    <h1>User: {{ current_user.username }}</h1>
+    <h2>Enter in your Device ID Number</h2>
+    {% if form %}
+    {{ wtf.quick_form(form) }}
+    <br>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block scripts %}
+    {{ super() }}
+    {{ moment.include_moment() }}
+{% endblock %}
+
+{% block app_content %}
+    <h1>Device {{ device_title }} Data</h1>
+    <br>
+    {% if fire_alarm == 1 %}
+    <h1><font color="red">FIRE DETECTED</font></h1>
+    <br>
+    <h2>Fire Travel Prediction</h2>   
+    <div class="row">
+        <div class="col-md-4">
+          <table class="table table-striped" id="owned_stock_table">
+            <thead>
+              <tr>
+                <th>Perameter</th>
+                <th>Calculated Prediction</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for post in fire_predictions %}
+              <tr>
+                <td>{{ post.type }}</td>
+                <td>{{ post.reading }}{{ post.unit }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <br>
+    {% else %}
+    <h2>Wildfire Calculated Prediction</h2>   
+    <div class="row">
+        <div class="col-md-4">
+          <table class="table table-striped" id="owned_stock_table">
+            <thead>
+              <tr>
+                <th>Perameter</th>
+                <th>Calculated Prediction</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for post in no_fire_predictions %}
+              <tr>
+                <td>{{ post.type }}</td>
+                <td>{{ post.reading }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <br>
+    {% endif %}
+    <h2>Sensor Data</h2>   
+    <h4> Data Last Received: {{ moment(timestamp).fromNow() }} </h4>
+    <div class="row">
+        <div class="col-md-4">
+          <table class="table table-striped" id="owned_stock_table">
+            <thead>
+              <tr>
+                <th>Sensor</th>
+                <th>Sensor ID</th>
+                <th>Reading</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for post in sensors %}
+              <tr>
+                <td>{{ post.type }} Sensor</td>
+                <td>{{ post.data.sensor }}</td>
+                <td>{{ post.reading }}{{ post.unit }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <br>
+    <h2>GPS Location</h2>   
+    <div class="row">
+        <div class="col-md-4">
+          <table class="table table-striped" id="owned_stock_table">
+            <thead>
+              <tr>
+                <th>Perameter</th>
+                <th>Reading</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for post in gps %}
+              <tr>
+                <td>{{ post.type }}</td>
+                <td>{{ post.reading }}{{ post.unit }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <br>
+      <h2>Wildlife Tracking Information</h2>   
+      <div class="row">
+          <div class="col-md-4">
+            <table class="table table-striped" id="owned_stock_table">
+              <thead>
+                <tr>
+                  <th>Type of Animal Observed</th>
+                  <th>Number of Animals Observed</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for post in images %}
+                <tr>
+                  <td>{{ post.animal }}</td>
+                  <td>{{ post.reading }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <br>
+        <h2>Wind Information</h2>   
+        <div class="row">
+            <div class="col-md-4">
+              <table class="table table-striped" id="owned_stock_table">
+                <thead>
+                  <tr>
+                    <th>Perameter</th>
+                    <th>Reading</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for post in wind %}
+                  <tr>
+                    <td>{{ post.data.wind_data }}</td>
+                    <td>{{ post.reading }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>        
+{% endblock %}
