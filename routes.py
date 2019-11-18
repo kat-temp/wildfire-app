@@ -67,21 +67,21 @@ def device(device_id):
     gps_lat = gps.latitude
     gps_long = gps.longitude
 
-    lat=gps_lat
-    lon=gps_long
-    current_weather_url = 'http://api.apixu.com/v1/current.json?key=9a0194fc463f498287a191958191102&q='
+    lat=gps_lat[:-1]
+    lon=gps_long[:-1]
+    current_weather_url = 'http://api.weatherstack.com/current?access_key=90a599db6293c173bdbabf8d63354946&query='
     final_current_weather_url = current_weather_url + lat + ',' + lon
     response = requests.get(final_current_weather_url)
     data = response.json()
     print("accessing weather data from apixu...")
-    print("for latitude: 30.6280N and longitude: 96.334W:")
-    print("the wind speed in mph is: " + str(data['current']['wind_mph']))
+    print("for latitude: "+lat+" and longitude: "+lon)
+    print("the wind speed in mph is: " + str(data['current']['wind_speed']))
     print("the wind degree is: " + str(data['current']['wind_degree']))
     print("the wind direction is: " + str(data['current']['wind_dir']))
     wind = [
         {
             'data' : {'wind_data' : 'Wind Speed'},
-            'reading' : str(data['current']['wind_mph'])
+            'reading' : str(data['current']['wind_speed'])
         },
         {
             'data' : {'wind_data' : 'Wind Degree'},
@@ -93,7 +93,7 @@ def device(device_id):
         }
     ]
 
-    precipitation=data['current']['precip_mm']
+    #precipitation=data['current']['precip_mm']
 
 
     sensors = [
@@ -147,12 +147,12 @@ def device(device_id):
         {
             'type' : 'Latitude',
             'reading' : gps.latitude,
-            'unit' : '° N'
+            'unit' : ' '
         },
         {
             'type' : 'Longitude',
             'reading' : gps.longitude,
-            'unit' : '° W'            
+            'unit' : ' '            
         }
     ]
     
@@ -190,21 +190,21 @@ def device(device_id):
     else:
         fire_danger_level= "Error"
 
-    if 0 <= float(data['current']['wind_mph']) < 4:
+    if 0 <= float(data['current']['wind_speed']) < 4:
         rate_of_spread=1
-    elif 4 <= float(data['current']['wind_mph']) < 8:
+    elif 4 <= float(data['current']['wind_speed']) < 8:
         rate_of_spread=2
-    elif 8 <= float(data['current']['wind_mph']) < 13:
+    elif 8 <= float(data['current']['wind_speed']) < 13:
         rate_of_spread=3
-    elif 13 <= float(data['current']['wind_mph']) < 19:
+    elif 13 <= float(data['current']['wind_speed']) < 19:
         rate_of_spread=5
-    elif 19 <= float(data['current']['wind_mph']) < 25:
+    elif 19 <= float(data['current']['wind_speed']) < 25:
         rate_of_spread=7
-    elif 25 <= float(data['current']['wind_mph']) < 32:
+    elif 25 <= float(data['current']['wind_speed']) < 32:
         rate_of_spread=8
-    elif 32 <= float(data['current']['wind_mph']) < 38:
+    elif 32 <= float(data['current']['wind_speed']) < 38:
         rate_of_spread=11
-    elif 38 <= float(data['current']['wind_mph']):
+    elif 38 <= float(data['current']['wind_speed']):
         rate_of_spread=12
     else: 
         rate_of_spread=0
@@ -272,3 +272,8 @@ def register():
         flash('Congratulations, you are now a registered user!')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
+
+@app.route('/user_help')
+@login_required 
+def user_help():
+    return render_template('user_help.html', title='User Help')
